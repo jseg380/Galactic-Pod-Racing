@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Galactic Pod Racing</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../libs/jquery.js"></script>
+
+    <script type="importmap">
+          { "imports": { "three": "../libs/three.module.js" } }
+    </script>
+    
+    <script type="module" src="./MyScene.js"></script>
+
+    <style>
+        body{
+            margin: 0;
+            overflow: hidden; 
+        }
+        #WebGL-output {
+            position: relative; 
+        }
+
+        #vidas {
+            position: absolute; 
+            top: 10px; 
+            left: 10px; 
+            z-index: 1; 
+            color: white; 
+        }
+
+
+        /* Lose dialog */
+        .dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            z-index: 1000;
+        }
+
+        .dialog.open {
+            display: block;
+        }
+
+        .dialog-header {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .dialog-body {
+            margin-bottom: 20px;
+        }
+
+        .dialog-footer {
+            text-align: center;
+        }
+
+        .dialog-footer button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .dialog-footer button:hover {
+            background: #0056b3;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.open {
+            display: block;
+        }
+
+
+        /* Main screen */
+        .main-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/imgs/main_screen.jpg') no-repeat center center / cover;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-screen.open {
+            display: flex;
+        }
+
+        .main-screen .play-button {
+            padding: 30px 50px;
+            font-size: 24px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .main-screen .play-button:hover {
+            background: #0056b3;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.open {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<!-- Div which will hold the Output -->
+<div id="WebGL-output">
+<div id="vidas">Vidas: 0</div>
+</div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Main Screen Dialog -->
+  <div class="main-screen" id="mainScreen">
+    <button class="play-button" id="playButton">Jugar</button>
+  </div>
+
+  <!-- Dialog -->
+  <div class="dialog" id="dialog">
+    <div class="dialog-header">Galactic Pod Racing</div>
+    <div class="dialog-body">Has perdido. ¿Quieres volver a intentarlo?</div>
+    <div class="dialog-footer">
+      <button id="restartButton">Reiniciar</button>
+    </div>
+  </div>
+
+  <script>
+    // Function to open the main screen and return a Promise
+    function openMainScreen() {
+      return new Promise((resolve) => {
+        // Show the main screen and overlay
+        const mainScreen = document.getElementById('mainScreen');
+        const overlay = document.getElementById('overlay');
+        mainScreen.classList.add('open');
+        overlay.classList.add('open');
+
+        // Get the Play button and add click event listener
+        const playButton = document.getElementById('playButton');
+
+        playButton.addEventListener('click', () => {
+          // Close the main screen and overlay
+          closeMainScreen();
+
+          // Resolve the Promise
+          resolve();
+        });
+
+        // Function to close the main screen and overlay
+        function closeMainScreen() {
+          mainScreen.classList.remove('open');
+          overlay.classList.remove('open');
+        }
+      });
+    }
+
+    // Function to open the dialog and return a Promise
+    function openDialog() {
+        // Show the dialog and overlay
+        const dialog = document.getElementById('dialog');
+        const overlay = document.getElementById('overlay');
+        dialog.classList.add('open');
+        overlay.classList.add('open');
+
+        // Get the Restart button and add click event listener
+        const restartButton = document.getElementById('restartButton');
+
+        restartButton.addEventListener('click', () => {
+          // Close the dialog and overlay
+          closeDialog();
+            
+          location.reload();
+        });
+
+        // Function to close the dialog and overlay
+        function closeDialog() {
+          dialog.classList.remove('open');
+          overlay.classList.remove('open');
+        }
+    }
+  </script>
+</body>
+</html>
